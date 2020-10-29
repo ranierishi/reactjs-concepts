@@ -5,7 +5,7 @@ import "./styles.css";
 
 function App() {
 
-  const [repositories, setRepositories] = useState([''])
+  const [repositories, setRepositories] = useState([])
   
 
   useEffect(()=>{
@@ -13,7 +13,7 @@ function App() {
       setRepositories(response.data)
     })
 
-  },[repositories])
+  },[])
 
 
    /* useEffect(()=>{
@@ -39,9 +39,14 @@ function App() {
 
   async function handleRemoveRepository(id) {
     const response = await api.delete(`repositories/${id}`)
-    
+    console.log(response)
       const result = repositories.findIndex(repository => repository.id ===id)
-      setRepositories(repositories.splice(result, 1))    
+      
+      const newRepositories = [...repositories]
+      newRepositories.splice(result, 1)
+
+      setRepositories(newRepositories)  
+          
 
     
   }
@@ -49,7 +54,7 @@ function App() {
   return (
     <div>
       <ul data-testid="repository-list">
-        {repositories.map(repository => <li>
+        {repositories.map(repository => <li key={repository.id}>
           {repository.title}
           <button onClick={() => handleRemoveRepository(repository.id)}>
             Remover
